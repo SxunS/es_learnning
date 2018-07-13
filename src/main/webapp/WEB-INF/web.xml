@@ -14,8 +14,39 @@
       <param-value>UTF-8</param-value>
     </init-param>
   </filter>
+
+
+  <filter>
+    <filter-name>DruidWebStatFilter</filter-name>
+    <filter-class>com.alibaba.druid.support.http.WebStatFilter</filter-class>
+    <init-param>
+      <param-name>exclusions</param-name>
+      <param-value>*.js,*.gif,*.jpg,*.png,*.css,*.ico,*.jsp,/druid/*,/download/*</param-value>
+    </init-param>
+    <init-param>
+      <param-name>sessionStatMaxCount</param-name>
+      <param-value>2000</param-value>
+    </init-param>
+    <init-param>
+      <param-name>sessionStatEnable</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>principalSessionName</param-name>
+      <param-value>session_user_key</param-value>
+    </init-param>
+    <init-param>
+      <param-name>profileEnable</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </filter>
+
   <filter-mapping>
     <filter-name>encodingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>DruidWebStatFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
@@ -30,10 +61,36 @@
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
+  <!--durid数据信息统计servlet-->
+  <servlet>
+    <servlet-name>DruidStatView</servlet-name>
+    <servlet-class>com.alibaba.druid.support.http.StatViewServlet</servlet-class>
+    <init-param>
+      <!-- 允许清空统计数据 -->
+      <param-name>resetEnable</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <!-- 用户名 -->
+      <param-name>loginUsername</param-name>
+      <param-value>xiaoming</param-value>
+    </init-param>
+    <init-param>
+      <!-- 密码 -->
+      <param-name>loginPassword</param-name>
+      <param-value>woshixiaoming</param-value>
+    </init-param>
+  </servlet>
+
   <servlet-mapping>
     <servlet-name>SpringMVC</servlet-name>
     <!-- 匹配所有请求，此处也可以配置成 *.do 形式 -->
     <url-pattern>/</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>DruidStatView</servlet-name>
+    <url-pattern>/druid/*</url-pattern>
   </servlet-mapping>
 
   <welcome-file-list>
